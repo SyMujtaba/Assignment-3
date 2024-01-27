@@ -1,0 +1,82 @@
+#include <iostream>
+
+// Define a structure for the node in the linked list
+struct Node {
+    int row;
+    int col;
+    int value;
+    Node* next;
+
+    // Constructor to initialize the node
+    Node(int r, int c, int v) : row(r), col(c), value(v), next(nullptr) {}
+};
+
+// Define a class for the sparse matrix using linked list representation
+class SparseMatrix {
+private:
+    int numRows;
+    int numCols;
+    Node* head; // Head of the linked list
+
+public:
+    // Constructor to initialize the sparse matrix
+    SparseMatrix(int rows, int cols) : numRows(rows), numCols(cols), head(nullptr) {}
+
+    // Function to insert a non-zero element into the linked list
+    void insert(int row, int col, int value) {
+        // Create a new node with the given values
+        Node* newNode = new Node(row, col, value);
+
+        // Insert the new node at the beginning of the linked list
+        newNode->next = head;
+        head = newNode;
+    }
+
+    // Function to display the sparse matrix
+    void display() {
+        Node* current = head;
+
+        while (current != nullptr) {
+            std::cout << "Row: " << current->row
+                      << ", Column: " << current->col
+                      << ", Value: " << current->value << std::endl;
+            current = current->next;
+        }
+    }
+
+    // Destructor to free memory used by the linked list
+    ~SparseMatrix() {
+        Node* current = head;
+        Node* nextNode;
+
+        while (current != nullptr) {
+            nextNode = current->next;
+            delete current;
+            current = nextNode;
+        }
+    }
+};
+
+int main() {
+    int rows, cols;
+    std::cout << "Enter the number of rows and columns for the sparse matrix: ";
+    std::cin >> rows >> cols;
+
+    SparseMatrix sparseMatrix(rows, cols);
+
+    int nonZeroCount;
+    std::cout << "Enter the number of non-zero elements: ";
+    std::cin >> nonZeroCount;
+
+    for (int i = 0; i < nonZeroCount; ++i) {
+        int row, col, value;
+        std::cout << "Enter row, column, and value for element " << i + 1 << ": ";
+        std::cin >> row >> col >> value;
+        sparseMatrix.insert(row, col, value);
+    }
+
+    std::cout << "Sparse Matrix:" << std::endl;
+    sparseMatrix.display();
+
+    return 0;
+}
